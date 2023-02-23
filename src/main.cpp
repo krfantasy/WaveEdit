@@ -5,9 +5,9 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 
-#include "imconfig.h"
-#include "imgui.h"
-#include "imgui/examples/sdl_opengl2_example/imgui_impl_sdl.h"
+#include "imgui/imgui.h"
+#include "imgui/backends/imgui_impl_sdl2.h"
+#include "imgui/backends/imgui_impl_opengl2.h"
 
 
 #ifdef ARCH_MAC
@@ -68,13 +68,17 @@ int main(int argc, char **argv) {
 	assert(window);
 	SDL_SetWindowMinimumSize(window, 800, 600);
 	SDL_GLContext glContext = SDL_GL_CreateContext(window);
+	SDL_GL_MakeCurrent(window, glContext);
 	// Disable V-Sync
 	// SDL_GL_SetSwapInterval(0);
 	// Enable V-Sync
 	SDL_GL_SetSwapInterval(1);
 
 	// Set up Imgui binding
-	ImGui_ImplSdlGL2_Init(window);
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui_ImplSDL2_InitForOpenGL(window, &glContext);
+	ImGui_ImplOpenGL2_Init();
 
 	// Initialize modules
 	uiInit();
@@ -91,7 +95,7 @@ int main(int argc, char **argv) {
 		// Scan events
 		SDL_Event event;
 		while (SDL_PollEvent(&event)) {
-			ImGui_ImplSdlGL2_ProcessEvent(&event);
+			ImGui_ImplSDL2_ProcessEvent(&event);
 			if (event.type == SDL_QUIT) {
 				running = false;
 			}
@@ -118,28 +122,31 @@ int main(int argc, char **argv) {
 			SDL_SetWindowTitle(window, newTitle);
 		}
 
-		ImGui_ImplSdlGL2_NewFrame(window);
 		// Only render if window is visible
 		Uint32 flags = SDL_GetWindowFlags(window);
 		if ((flags & SDL_WINDOW_SHOWN) && !(flags & SDL_WINDOW_MINIMIZED)) {
+			ImGui_ImplOpenGL2_NewFrame();
+			ImGui_ImplSDL2_NewFrame(window);
+			ImGui::NewFrame();
 			// Build render buffer
 			uiRender();
+
+			// Render frame
+			glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
+			glClearColor(0.0, 0.0, 0.0, 1.0);
+			glClear(GL_COLOR_BUFFER_BIT);
+			ImGui::Render();
+			ImGui_ImplOpenGL2_RenderDrawData(ImGui::GetDrawData());
+			SDL_GL_SwapWindow(window);
 		}
-
-		// Render frame
-		glViewport(0, 0, (int)ImGui::GetIO().DisplaySize.x, (int)ImGui::GetIO().DisplaySize.y);
-
-		glClearColor(0.0, 0.0, 0.0, 1.0);
-		glClear(GL_COLOR_BUFFER_BIT);
-		ImGui::Render();
-		SDL_GL_SwapWindow(window);
 	}
 
 	currentBank.save("autosave.dat");
 
 	// Cleanup
 	uiDestroy();
-	ImGui_ImplSdlGL2_Shutdown();
+	ImGui_ImplOpenGL2_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
 	SDL_GL_DeleteContext(glContext);
 	SDL_DestroyWindow(window);
 	SDL_Quit();

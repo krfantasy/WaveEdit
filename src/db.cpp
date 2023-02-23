@@ -208,7 +208,7 @@ static void uploadedPopup() {
 		ImGui::OpenPopup("Successfully Uploaded");
 	}
 
-	ImGui::SetNextWindowContentWidth(300.0);
+	ImGui::SetNextWindowContentSize(ImVec2(300.0, 0.0));
 
 	if (ImGui::BeginPopupModal("Successfully Uploaded", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
 		ImGui::TextWrapped("%s", "Bank successfully uploaded! It will be added to the library after moderator approval.");
@@ -298,7 +298,7 @@ static void uploadPopup() {
 		ImGui::OpenPopup("Upload");
 	}
 
-	ImGui::SetNextWindowContentWidth(600.0);
+	ImGui::SetNextWindowContentSize(ImVec2(600.0, 0.0));
 	if (ImGui::BeginPopupModal("Upload", NULL, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize)) {
 		ImGui::PushItemWidth(-140.0);
 		ImGui::InputText("Title (required)", title, sizeof(title));

@@ -516,7 +516,6 @@ void renderWaterfall(const char *name, float height, float amplitude, float angl
 			points[i] = point;
 		}
 		float thickness = 1.0;
-		window->DrawList->Flags |= ImDrawListFlags_AntiAliasedLines;
 		window->DrawList->AddPolyline(points, WAVE_LEN, ImGui::GetColorU32(ImGuiCol_FrameBg), false, thickness);
 	}
 
@@ -532,7 +531,6 @@ void renderWaterfall(const char *name, float height, float amplitude, float angl
 			points[i] = point;
 		}
 		float thickness = 1.0 + 4.0 * fmaxf(1.0 - fabsf(b - *activeZ), 0.0);
-		window->DrawList->Flags |= ImDrawListFlags_AntiAliasedLines;
 		window->DrawList->AddPolyline(points, WAVE_LEN, ImGui::GetColorU32(ImGuiCol_PlotHistogram), false, thickness);
 	}
 

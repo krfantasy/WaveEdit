@@ -18,7 +18,7 @@ SOURCES = \
 	ext/imgui/imgui_tables.cpp \
 	ext/imgui/imgui_demo.cpp \
 	ext/imgui/backends/imgui_impl_sdl2.cpp \
-	ext/imgui/backends/imgui_impl_opengl2.cpp \
+	ext/imgui/backends/imgui_impl_opengl3.cpp \
 	$(wildcard src/*.cpp)
 
 

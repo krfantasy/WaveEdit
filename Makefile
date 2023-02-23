@@ -1,6 +1,6 @@
 VERSION = 1.1
 
-FLAGS = -Wall -Wextra -Wno-unused-parameter -g -Wno-unused -O3 -march=nocona -ffast-math \
+FLAGS = -Wall -Wextra -Wno-unused-parameter -g -Wno-unused -O3 -ffast-math \
 	-DVERSION=$(VERSION) -DPFFFT_SIMD_DISABLE \
 	-I. -Iext -Iext/imgui -Idep/include -Idep/include/SDL2
 CFLAGS =
@@ -31,9 +31,10 @@ ifeq ($(ARCH),lin)
 else ifeq ($(ARCH),mac)
 	# Mac
 	FLAGS += -DARCH_MAC \
-		-mmacosx-version-min=10.7
+		-mmacosx-version-min=11.0
+	CFLAGS += -arch x86_64 -arch arm64
 	CXXFLAGS += -stdlib=libc++
-	LDFLAGS += -mmacosx-version-min=10.7 \
+	LDFLAGS += -mmacosx-version-min=11.0 \
 		-stdlib=libc++ -lpthread \
 		-framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo \
 		-Ldep/lib -lSDL2 -lsamplerate -lsndfile -ljansson -lcurl

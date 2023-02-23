@@ -1,1 +1,5 @@
 *.o
+
+dist/
+dep/*
+!dep/Makefile
